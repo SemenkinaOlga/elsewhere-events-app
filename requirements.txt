@@ -1,3 +1,4 @@
+bokeh
 django
 gunicorn
 django-heroku
@@ -8,3 +9,4 @@ pandas
 numpy
 scipy
 scikit-learn
+wheel
