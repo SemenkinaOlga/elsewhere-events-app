@@ -24,6 +24,7 @@ df_country_source_year = data['country_source_year']
 df_city_year = data['city_year']
 df_city = data['city']
 
+fig = px.bar(df_country, x="country", y="count", color="macro_region")
 fig_bokeh = plots.get_bar_plot_sum(df_country_year, 'development_level', 'Title', plot_height, plot_width)
 html_bokeh = file_html(fig_bokeh, CDN, "my plot")
 fig_bokeh_2 = plots.get_2_dim_plot_sum(df_country_year, 'year', 'development_level', plot_height, plot_width)
