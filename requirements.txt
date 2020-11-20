@@ -10,3 +10,8 @@ numpy
 scipy
 scikit-learn
 wheel
+folium
+branca
+vincent
+json
+os
