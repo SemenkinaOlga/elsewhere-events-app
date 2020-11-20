@@ -13,5 +13,3 @@ wheel
 folium
 branca
 vincent
-json
-os
