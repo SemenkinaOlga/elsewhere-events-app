@@ -4,9 +4,12 @@ import pandas as pd
 folder = 'data'
 
 
-def get_relative_path(name):
+def get_relative_path(name, current_folder=""):
     dirname = os.path.abspath(os.getcwd())
-    file_name = os.path.join(os.path.join(dirname, folder), name)
+    file_name = os.path.join(dirname, folder)
+    if current_folder != "":
+        file_name = os.path.join(file_name, current_folder)
+    file_name = os.path.join(file_name, name)
     return file_name
 
 

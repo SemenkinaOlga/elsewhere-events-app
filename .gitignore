@@ -6,3 +6,5 @@ db.sqlite3
 getting-started/*
 .DS_Store
 .idea/
+
+data/init_map.html
