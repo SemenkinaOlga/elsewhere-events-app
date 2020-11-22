@@ -8,3 +8,5 @@ getting-started/*
 .idea/
 
 data/init_map.html
+
+data/map.html

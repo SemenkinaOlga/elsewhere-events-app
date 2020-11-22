@@ -15,6 +15,7 @@ import mapping
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server = app.server
+app.config["suppress_callback_exceptions"] = True
 
 plot_height = 300
 plot_width = 600
@@ -58,6 +59,7 @@ min_year = min(years)
 max_year = max(years)
 clusters = [x for x in range(2, 13, 1)]
 print(clusters)
+print(df_country_source_year.columns)
 
 
 init_cluster_number = 6
@@ -70,61 +72,89 @@ init_use_ico = False
 init_map = make_map(max_year, init_cluster_number, init_sources, init_use_ico)
 init_map.save(rd.get_relative_path("init_map.html"))
 
-df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/gapminderDataFiveYear.csv')
-
 app.layout = html.Div(children=[
     html.H1(children='Elsewhere Events Dash'),
-    html.Div(children='''A web application for research.'''),
+    html.H2(children='''A web application for research.'''),
 
-    html.Div({
-        dcc.Graph(id='graph-with-slider'),
-        dcc.Slider(
-            id='year-slider',
-            min=2010,
-            max=2020,
-            value=2020,
-            step=None
+    html.Div(id='map-div', children=[
+        html.Div(id='map-settings', children=[
+            html.Label('Year'),
+            dcc.Slider(
+                id='year-slider-map',
+                min=min_year,
+                max=max_year,
+                value=max_year,
+                marks={str(year): str(year) for year in years},
+                step=None
+            ),
+            html.Label('Clusters amount'),
+            dcc.Slider(
+                id='cluster-slider-map',
+                min=min(clusters),
+                max=max(clusters),
+                value=init_cluster_number,
+                marks={str(cl): str(cl) for cl in clusters},
+                step=None
+            ),
+            dcc.Checklist(
+                id='use-ico-map',
+                options=[
+                    {'label': 'Use icons', 'value': 'ICO'}
+                ],
+                value=[],
+                labelStyle={'display': 'inline-block'}
+            ),
+            dcc.Checklist(
+                id='multi-source-map',
+                options=[
+                    {'label': 'Source 1', 'value': 'ICO'}
+                ],
+                value=[],
+                labelStyle={'display': 'inline-block'}
+            )
+        ], style={'width': '28%', 'float': 'left', 'display': 'inline-block'}),
+
+        html.Div(id='main_map_div', children=[
+            html.Iframe(
+                id='map-main',
+                style={'border': 'none', 'width': '100%', 'height': 500},
+                srcDoc=open(rd.get_relative_path("init_map.html"), 'r').read()
+            )
+        ], style={'width': '68%', 'display': 'inline-block'})
+    ]),
+
+    html.Div(id='graphs', children=[
+        dcc.Graph(
+            id='example-graph',
+            figure=fig
+        ),
+
+        html.Iframe(
+            srcDoc=html_bokeh,
+            width=plot_width * 1.1,
+            height=plot_height * 1.1
+        ),
+
+        html.Iframe(
+            srcDoc=html_bokeh_2,
+            width=plot_width * 1.1,
+            height=plot_height * 1.1
         )
-    },
-        style={'width': '100%', 'float': 'right', 'display': 'inline-block'}),
-
-    html.Div({
-
-    },
+    ],
         style={'width': '100%', 'display': 'inline-block'}),
-
-    dcc.Graph(
-        id='example-graph',
-        figure=fig
-    ),
-
-    html.Iframe(
-        srcDoc=html_bokeh,
-        width=plot_width * 1.1,
-        height=plot_height * 1.1
-    ),
-
-    html.Iframe(
-        srcDoc=html_bokeh_2,
-        width=plot_width * 1.1,
-        height=plot_height * 1.1
-    )
 ])
 
 
 @app.callback(
-    Output('graph-with-slider', 'figure'),
-    [Input('year-slider', 'value')])
-def update_figure(selected_year):
-    filtered_df = df[df.year == selected_year]
-
-    fig = px.scatter(filtered_df, x="gdpPercap", y="lifeExp",
-                     size="pop", color="continent", hover_name="country",
-                     log_x=True, size_max=55)
-
-    fig.update_layout(transition_duration=500)
-
-    return fig
+    Output('map-main', 'srcDoc'),
+    [Input('year-slider-map', 'value'),
+     Input('cluster-slider-map', 'value'),
+     Input('multi-source-map', 'value'),
+     Input('use-ico-map', 'value')])
+def update(selected_year, cluster_number, sources, use_icons):
+     current_map = make_map(selected_year, cluster_number, sources, use_icons)
+     current_map.save(rd.get_relative_path("map.html"))
+     return open(rd.get_relative_path("map.html"), 'r').read()
 
 
 if __name__ == '__main__':
