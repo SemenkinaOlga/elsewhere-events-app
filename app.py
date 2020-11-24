@@ -1,4 +1,5 @@
 import dash
+import dash_table
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
@@ -23,19 +24,44 @@ default_colors = ['red', 'orange', 'lightyellow', 'green', 'darkgreen']
 more_colors = ['red', 'orange', 'yellow', 'green', 'deepskyblue', 'blue', 'darkviolet']
 ten_colors = ['red', 'orange', 'yellow', 'lime', 'green', 'deepskyblue', 'blue', 'indigo', 'deeppink', 'black']
 
+additional_columns = ['macro_region', 'meso_region', 'development_level', 'gdp_per_capita',
+                      'gdp_volume', 'hdi', 'ECI', 'code', 'country_population_2018', 'country_population_2018_level']
 
-def make_map(selected_year, cluster_number, sources, use_icons):
-    df = df_country_year[df_country_year['year'] == selected_year]
-    df_prediction = clusterization.clusterization_K_Means_1dim(df, 'country', 'relative_1M_count', cluster_number)
 
-    name = "Relative events for countries in " + str(selected_year) + " - KMeans clusters " + str(cluster_number)
+def make_map(selected_year_min, selected_year_max, cluster_number, chosen_sources, use_icons, use_clusters):
+    print('make_map_with_sources')
+    df = df_country_source_year[df_country_source_year['year'] >= selected_year_min]
+    df = df[df['year'] <= selected_year_max]
+    df = df[df['source'].isin(chosen_sources)]
+    df = df.reset_index()
 
-    df_for_map = clusterization.add_indexation_by_events_amount_for_clusters(df_prediction)
+    dict_cols = dict((col, lambda x: x.iloc[0]) for col in additional_columns if col in df.columns)
+    dict_cols['count'] = "sum"
+    dict_cols['relative_1M_count'] = "sum"
+    grouped_df = df.groupby(['country', 'year']).agg(dict_cols).reset_index()
 
-    if use_icons:
-        return mapping.get_ico_map(df_for_map, 'index', name, ten_colors[:cluster_number], True)
+    rd.write_df(grouped_df, 'df_two.csv')
 
-    return mapping.get_simple_map(df_for_map, 'index', name, ten_colors[:cluster_number], True)
+    if use_clusters:
+        print('use_clusters')
+        df_predict = clusterization.clusterization_K_Means_1dim(grouped_df, 'country',
+                                                                'relative_1M_count', cluster_number)
+
+        name = "Relative events for countries in [" + str(selected_year_min) + ", " + \
+               str(selected_year_max) + "] - KMeans clusters " + str(cluster_number)
+
+        df_for_map = clusterization.add_indexation_by_events_amount_for_clusters(df_predict)
+
+        if use_icons:
+            return mapping.get_ico_map(df_for_map, 'index', name, ten_colors[:cluster_number], True)
+        return mapping.get_simple_map(df_for_map, 'index', name, ten_colors[:cluster_number], True)
+    else:
+        print('do not use_clusters')
+        name = "Relative number of events per 1M people in [" + str(selected_year_min) + ", " + \
+                            str(selected_year_max) + "]"
+        if use_icons:
+            return mapping.get_ico_map(grouped_df, 'relative_1M_count', name, ten_colors)
+        return mapping.get_simple_map(grouped_df, 'relative_1M_count', name, ten_colors)
 
 
 # Read files
@@ -52,24 +78,22 @@ html_bokeh = file_html(fig_bokeh, CDN, "my plot")
 fig_bokeh_2 = plots.get_2_dim_plot_sum(df_country_year, 'year', 'development_level', plot_height, plot_width)
 html_bokeh_2 = file_html(fig_bokeh_2, CDN, "my plot")
 
-years = df_country_year['year'].unique().tolist()
+years = df_country_source_year['year'].unique().tolist()
 years.sort()
 print(years)
 min_year = min(years)
 max_year = max(years)
 clusters = [x for x in range(2, 13, 1)]
 print(clusters)
-print(df_country_source_year.columns)
-
-
 init_cluster_number = 6
+print(df_country_source_year.columns.tolist())
 sources = df_country_source_year['source'].unique().tolist()
 print(sources)
 init_sources = ['TED', 'MEETUP', 'BEHANCE', 'EFLUX', 'ART_EDUCATION']
 print(init_sources)
 init_use_ico = False
 
-init_map = make_map(max_year, init_cluster_number, init_sources, init_use_ico)
+init_map = make_map(min_year, max_year, init_cluster_number, init_sources, init_use_ico, additional_columns)
 init_map.save(rd.get_relative_path("init_map.html"))
 
 app.layout = html.Div(children=[
@@ -78,14 +102,30 @@ app.layout = html.Div(children=[
 
     html.Div(id='map-div', children=[
         html.Div(id='map-settings', children=[
+            dcc.Checklist(
+                id='use-ico-map',
+                options=[
+                    {'label': 'Use icons', 'value': 'ICO'}
+                ],
+                value=[],
+                labelStyle={'display': 'inline-block'}
+            ),
             html.Label('Year'),
-            dcc.Slider(
-                id='year-slider-map',
+            dcc.RangeSlider(
+                id='year-range-slider',
                 min=min_year,
                 max=max_year,
-                value=max_year,
-                marks={str(year): str(year) for year in years},
-                step=None
+                step=1,
+                value=[min_year, max_year],
+                marks={str(year): str(year) for year in years}
+            ),
+            dcc.Checklist(
+                id='use-cluster-map',
+                options=[
+                    {'label': 'Use clusterization', 'value': 'UC'}
+                ],
+                value=['UC'],
+                labelStyle={'display': 'inline-block'}
             ),
             html.Label('Clusters amount'),
             dcc.Slider(
@@ -96,20 +136,11 @@ app.layout = html.Div(children=[
                 marks={str(cl): str(cl) for cl in clusters},
                 step=None
             ),
-            dcc.Checklist(
-                id='use-ico-map',
-                options=[
-                    {'label': 'Use icons', 'value': 'ICO'}
-                ],
-                value=[],
-                labelStyle={'display': 'inline-block'}
-            ),
+            html.Label('Sources'),
             dcc.Checklist(
                 id='multi-source-map',
-                options=[
-                    {'label': 'Source 1', 'value': 'ICO'}
-                ],
-                value=[],
+                options=[{'label': k, 'value': k} for k in sources],
+                value=init_sources,
                 labelStyle={'display': 'inline-block'}
             )
         ], style={'width': '28%', 'float': 'left', 'display': 'inline-block'}),
@@ -117,7 +148,7 @@ app.layout = html.Div(children=[
         html.Div(id='main_map_div', children=[
             html.Iframe(
                 id='map-main',
-                style={'border': 'none', 'width': '100%', 'height': 500},
+                style={'border': 'none', 'width': '100%', 'height': 600},
                 srcDoc=open(rd.get_relative_path("init_map.html"), 'r').read()
             )
         ], style={'width': '68%', 'display': 'inline-block'})
@@ -147,14 +178,15 @@ app.layout = html.Div(children=[
 
 @app.callback(
     Output('map-main', 'srcDoc'),
-    [Input('year-slider-map', 'value'),
+    [Input('year-range-slider', 'value'),
      Input('cluster-slider-map', 'value'),
      Input('multi-source-map', 'value'),
-     Input('use-ico-map', 'value')])
-def update(selected_year, cluster_number, sources, use_icons):
-     current_map = make_map(selected_year, cluster_number, sources, use_icons)
-     current_map.save(rd.get_relative_path("map.html"))
-     return open(rd.get_relative_path("map.html"), 'r').read()
+     Input('use-ico-map', 'value'),
+     Input('use-cluster-map', 'value')])
+def update(year_range, cluster_number, chosen_sources, use_icons, use_clusters):
+    current_map = make_map(year_range[0], year_range[1], cluster_number, chosen_sources, use_icons, use_clusters)
+    current_map.save(rd.get_relative_path("map.html"))
+    return open(rd.get_relative_path("map.html"), 'r').read()
 
 
 if __name__ == '__main__':

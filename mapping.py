@@ -9,11 +9,14 @@ import branca
 import read_data as rd
 
 map_folder = 'country coordinates'
+zoom_start = 2
+location = [27.664827, -81.516]
+location_zero = [27, 0]
 
 
 def get_simple_map(df, value_col, title, colors, steps=False):
 
-    current_map = folium.Map(location = [27.664827, -81.516], zoom_start = 3)
+    current_map = folium.Map(location=location_zero, zoom_start=zoom_start)
 
     ma = max(df[value_col])
     mi = min(df[value_col])
@@ -74,7 +77,7 @@ def get_simple_map(df, value_col, title, colors, steps=False):
 
 
 def get_ico_map(df, value_col, title, colors, steps=False):
-    current_map = folium.Map(location=[27.664827, -81.516], zoom_start=3)
+    current_map = folium.Map(location=location_zero, zoom_start=zoom_start)
 
     ma = max(df[value_col])
     mi = min(df[value_col])

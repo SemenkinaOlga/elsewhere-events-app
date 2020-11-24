@@ -25,6 +25,11 @@ def read_df(name, separator):
         print("File {filepath} not found...".format(filepath = file_name))
 
 
+def write_df(df, name):
+    out_file_name = os.path.join(os.getcwd(), name)
+    df.to_csv(out_file_name, index=False)
+
+
 def read_data():
     df_country = read_df('elsewhere_events_dataset_processed_country.csv', ',')
     print("Data df_country was read")
