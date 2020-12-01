@@ -209,7 +209,7 @@ def get_new_map(df, value_col, title, colors, steps=False):
                    'count', 'relative_1M_count']
     names = ['Country', 'Macro Region', 'Meso Region', 'Development level', 'GDP per capita',
                    'GDP volume', 'HDI', 'ECI', 'Population 2018', 'Population level 2018',
-                   'Events total amount', 'Relative per 1M events amount']
+                   'Events total amount (all sources)', 'Relative per 1M events amount (all sources)']
 
     for i in range(len(df)):
         tooltip.append(GeoJsonTooltip(

@@ -209,7 +209,7 @@ app.layout = html.Div(children=[
                 value='development_level',
                 clearable=False
             )
-        ], style={'width': '18%', 'float': 'left', 'display': 'inline-block'}),
+        ], style={'width': '28%', 'float': 'left', 'display': 'inline-block'}),
         html.Div(id='graphs-plot', children=[
             html.Iframe(
                 id="bokeh_bar",
@@ -223,7 +223,7 @@ app.layout = html.Div(children=[
                 width=plot_width * 1.1,
                 height=plot_height * 1.1
             )
-        ], style={'width': '78%', 'display': 'inline-block'})
+        ], style={'width': '68%', 'display': 'inline-block'})
 
     ],
         style={'width': '100%', 'display': 'inline-block'}),
