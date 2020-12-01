@@ -165,3 +165,72 @@ def get_ico_map(df, value_col, title, colors, steps=False):
                 folium.GeoJson(data=open(file_name, 'r', encoding='utf-8-sig').read(), tooltip=tooltip1[i]))
 
     return current_map
+
+
+def get_new_map(df, value_col, title, colors, steps=False):
+
+    current_map = folium.Map(location=location_zero, zoom_start=zoom_start)
+
+    ma = max(df[value_col])
+    mi = min(df[value_col])
+
+    if steps:
+        colormap = branca.colormap.StepColormap(
+            vmin=int(mi),
+            vmax=int(ma),
+            colors=colors,
+            # index=[mi,(ma-mi)*0.3+mi,(ma-mi)*0.6+mi,(ma-mi)*0.8+mi,ma],
+            caption=title,
+        )
+    else:
+        colormap = branca.colormap.LinearColormap(
+            vmin=int(mi),
+            vmax=int(ma),
+            colors=colors,
+            # index=[mi,(ma-mi)*0.3+mi,(ma-mi)*0.6+mi,(ma-mi)*0.8+mi,ma],
+            caption=title,
+        )
+
+    colormap.add_to(current_map)
+    name_country = df['code']
+
+    value = df[value_col].tolist()
+
+    def stile(k):
+        return lambda x: {
+            'fillColor': colormap(value[k]),
+            "color": "black",
+            "fillOpacity": 0.7,
+        }
+
+    tooltip = []
+    fields = ['country', 'macro_region', 'meso_region', 'development_level', 'gdp_per_capita',
+                   'gdp_volume', 'hdi', 'ECI', 'country_population_2018', 'country_population_2018_level',
+                   'count', 'relative_1M_count']
+    names = ['Country', 'Macro Region', 'Meso Region', 'Development level', 'GDP per capita',
+                   'GDP volume', 'HDI', 'ECI', 'Population 2018', 'Population level 2018',
+                   'Events total amount', 'Relative per 1M events amount']
+
+    for i in range(len(df)):
+        tooltip.append(GeoJsonTooltip(
+            fields=[*fields],
+            aliases=[*names],
+            localize=True,
+            sticky=False,
+            labels=True,
+            style="""
+            background-color: #F0EFEF;
+            border: 2px solid black;
+            border-radius: 3px;
+            box-shadow: 3px;
+        """,
+            max_width=800,
+        ))
+
+    for i in range(len(df)):
+        file_name = rd.get_relative_path(str(name_country[i]) + ".geo.json", map_folder)
+        if os.path.exists(file_name):
+            current_map.add_child(folium.GeoJson(data=open(file_name, 'r', encoding='utf-8-sig').read(),
+                                                 tooltip=tooltip[i], style_function=stile(i)))
+
+    return current_map

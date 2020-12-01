@@ -67,11 +67,11 @@ def make_map(df_for_map, selected_year_min, selected_year_max, cluster_number, c
     if use_clusters:
         name = "Relative events for countries in [" + str(selected_year_min) + ", " + \
                str(selected_year_max) + "] - KMeans clusters " + str(cluster_number)
-        return mapping.get_simple_map(df_for_map, 'index', name, ten_colors[:cluster_number], True)
+        return mapping.get_new_map(df_for_map, 'index', name, ten_colors[:cluster_number], True)
     else:
         name = "Relative number of events per 1M people in [" + str(selected_year_min) + ", " + \
                             str(selected_year_max) + "]"
-        return mapping.get_simple_map(df_for_map, 'relative_1M_count', name, ten_colors)
+        return mapping.get_new_map(df_for_map, 'relative_1M_count', name, ten_colors)
 
 
 def create_levels(df, column):
