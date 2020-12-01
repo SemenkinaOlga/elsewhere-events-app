@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","id":"SYC","properties":{"name":"seychelles","Macro Region":"Africa","Meso Region":"Eastern Africa","GDP per Capita":"29062.0","HDI":"0.8009999999999999","ECI":"nan","Population 2018":"97094.0","country":"seychelles","macro_region":"Africa","meso_region":"Eastern Africa","development_level":"Developing economies","gdp_per_capita":"29062.0","gdp_volume":"2785414459.0","hdi":"0.8009999999999999","ECI":"nan","code":"SYC","country_population_2018":"97094.0","country_population_2018_level":"<100k","lat":"-4.35","lon":"55.4","count":"4","relative_1M_count":"41.197190351618026"},"geometry":{"type":"Point","coordinates":[55.4,-4.35]}}
+]}

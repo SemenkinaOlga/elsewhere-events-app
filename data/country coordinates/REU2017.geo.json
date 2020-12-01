@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","id":"REU","properties":{"country":"réunion","country":"réunion","year":"2017","macro_region":"Europe","meso_region":"Western Europe","development_level":"Developed economies","gdp_per_capita":"27793.0","gdp_volume":"23858000.0","hdi":"nan","ECI":"nan","code":"REU","country_population_2018":"882531.0","country_population_2018_level":"100k-1M","lat":"-21.06","lon":"55.36","count":"28","relative_1M_count":"31.726930838690084"},"geometry":{"type":"Point","coordinates":[55.36,-21.06]}}
+]}

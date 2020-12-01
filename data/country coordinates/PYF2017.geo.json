@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","id":"PYF","properties":{"country":"french polynesia","country":"french polynesia","year":"2017","macro_region":"Oceania","meso_region":"Oceania","development_level":"Developing economies","gdp_per_capita":"17000.0","gdp_volume":"4692000000.0","hdi":"nan","ECI":"nan","code":"PYF","country_population_2018":"277673.0","country_population_2018_level":"100k-1M","lat":"-15.0","lon":"-140.0","count":"11","relative_1M_count":"39.61494275640771"},"geometry":{"type":"Point","coordinates":[-140.0,-15.0]}}
+]}

@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","id":"LIE","properties":{"name":"liechtenstein","Macro Region":"Europe","Meso Region":"Western Europe","GDP per Capita":"165028.0","HDI":"0.917","ECI":"nan","Population 2018":"37918.0","country":"liechtenstein","macro_region":"Europe","meso_region":"Western Europe","development_level":"Developed economies","gdp_per_capita":"165028.0","gdp_volume":"6214633651.0","hdi":"0.917","ECI":"nan","code":"LIE","country_population_2018":"37918.0","country_population_2018_level":"<100k","lat":"47.16","lon":"9.32","count":"157","relative_1M_count":"4140.5137401761685"},"geometry":{"type":"Point","coordinates":[9.32,47.16]}}
+]}

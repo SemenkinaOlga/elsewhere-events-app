@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","id":"SGP","properties":{"country":"singapore","country":"singapore","year":"2008","macro_region":"Asia","meso_region":"South-eastern Asia","development_level":"Developing economies","gdp_per_capita":"96553.0","gdp_volume":"541877633642.0","hdi":"0.935","ECI":"1.8653400000000002","code":"SGP","country_population_2018":"5757503.0","country_population_2018_level":"5-50M","lat":"1.22","lon":"103.48","count":"149","relative_1M_count":"25.87927440072545"},"geometry":{"type":"Point","coordinates":[103.48,1.22]}}
+]}

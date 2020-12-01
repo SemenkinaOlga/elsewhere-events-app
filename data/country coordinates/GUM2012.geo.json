@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","id":"GUM","properties":{"country":"guam","country":"guam","year":"2012","macro_region":"Oceania","meso_region":"Oceania","development_level":"Developing economies","gdp_per_capita":"35600.0","gdp_volume":"5793000000.0","hdi":"nan","ECI":"nan","code":"GUM","country_population_2018":"165770.0","country_population_2018_level":"100k-1M","lat":"13.28","lon":"144.47","count":"1","relative_1M_count":"6.032454605779091"},"geometry":{"type":"Point","coordinates":[144.47,13.28]}}
+]}

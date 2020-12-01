@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","id":"GIB","properties":{"name":"gibraltar","Macro Region":"Europe","Meso Region":"Southern Europe","GDP per Capita":"61700.0","HDI":"nan","ECI":"nan","Population 2018":"33715.0","country":"gibraltar","macro_region":"Europe","meso_region":"Southern Europe","development_level":"Developed economies","gdp_per_capita":"61700.0","gdp_volume":"2044000000.0","hdi":"nan","ECI":"nan","code":"GIB","country_population_2018":"33715.0","country_population_2018_level":"<100k","lat":"36.08","lon":"-5.21","count":"80","relative_1M_count":"2372.831084087201"},"geometry":{"type":"Point","coordinates":[-5.21,36.08]}}
+]}

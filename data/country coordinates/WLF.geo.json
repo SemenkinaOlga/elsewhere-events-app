@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","id":"WLF","properties":{"name":"wallis and futuna","Macro Region":"Europe","Meso Region":"Western Europe","GDP per Capita":"3800.0","HDI":"nan","ECI":"nan","Population 2018":"11653.0","country":"wallis and futuna","macro_region":"Europe","meso_region":"Western Europe","development_level":"Developed economies","gdp_per_capita":"3800.0","gdp_volume":"nan","hdi":"nan","ECI":"nan","code":"WLF","country_population_2018":"11653.0","country_population_2018_level":"<100k","lat":"-13.18","lon":"-176.12","count":"40","relative_1M_count":"3432.5924654595387"},"geometry":{"type":"Point","coordinates":[-176.12,-13.18]}}
+]}

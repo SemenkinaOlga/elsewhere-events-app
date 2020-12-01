@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","id":"IMN","properties":{"country":"isle of man","country":"isle of man","year":"2017","macro_region":"Europe","meso_region":"Northern Europe","development_level":"Developed economies","gdp_per_capita":"84600.0","gdp_volume":"6792000000.0","hdi":"nan","ECI":"nan","code":"IMN","country_population_2018":"84073.0","country_population_2018_level":"<100k","lat":"54.15","lon":"-4.3","count":"3","relative_1M_count":"35.683275248890844"},"geometry":{"type":"Point","coordinates":[-4.3,54.15]}}
+]}

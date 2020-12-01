@@ -1,1 +1,1 @@
-"name","Macro Region","Meso Region","GDP per Capita","HDI","ECI","Population 2018"
+"country","year","macro_region","meso_region","development_level","gdp_per_capita","gdp_volume","hdi","ECI","code","country_population_2018","country_population_2018_level","lat","lon","count","relative_1M_count"

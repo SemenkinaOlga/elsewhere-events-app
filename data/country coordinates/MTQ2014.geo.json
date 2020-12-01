@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","id":"MTQ","properties":{"country":"martinique","country":"martinique","year":"2014","macro_region":"Europe","meso_region":"Western Europe","development_level":"Developed economies","gdp_per_capita":"30056.0","gdp_volume":"11314000.0","hdi":"nan","ECI":"nan","code":"MTQ","country_population_2018":"375672.0","country_population_2018_level":"100k-1M","lat":"14.4","lon":"-61.0","count":"33","relative_1M_count":"87.84258608573437"},"geometry":{"type":"Point","coordinates":[-61.0,14.4]}}
+]}

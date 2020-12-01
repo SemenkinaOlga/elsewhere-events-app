@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","id":"LKA","properties":{"country":"sri lanka","year":"2017","macro_region":"Asia","meso_region":"Southern Asia","development_level":"Developing economies","gdp_per_capita":"12879.0","gdp_volume":"276168455466.0","hdi":"0.78","ECI":"-0.901589","code":"LKA","country_population_2018":"21228760.0","country_population_2018_level":"5-50M","lat":"7.0","lon":"81.0","count":"311","relative_1M_count":"14.649937160719704","name":"Sri Lanka"},"geometry":{"type":"Polygon","coordinates":[[[81.787959,7.523055],[81.637322,6.481775],[81.21802,6.197141],[80.348357,5.96837],[79.872469,6.763463],[79.695167,8.200843],[80.147801,9.824078],[80.838818,9.268427],[81.304319,8.564206],[81.787959,7.523055]]]}}
+]}

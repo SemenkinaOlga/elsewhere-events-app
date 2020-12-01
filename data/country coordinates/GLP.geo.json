@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","id":"GLP","properties":{"name":"guadeloupe","Macro Region":"Europe","Meso Region":"Western Europe","GDP per Capita":"26855.0","HDI":"nan","ECI":"nan","Population 2018":"399848.0","country":"guadeloupe","macro_region":"Europe","meso_region":"Western Europe","development_level":"Developed economies","gdp_per_capita":"26855.0","gdp_volume":"11556000.0","hdi":"nan","ECI":"nan","code":"GLP","country_population_2018":"399848.0","country_population_2018_level":"100k-1M","lat":"16.15","lon":"-61.35","count":"18","relative_1M_count":"45.01710650047018"},"geometry":{"type":"Point","coordinates":[-61.35,16.15]}}
+]}

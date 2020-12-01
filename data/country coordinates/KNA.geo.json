@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","id":"KNA","properties":{"name":"saint kitts and nevis","Macro Region":"Americas","Meso Region":"Caribbean","GDP per Capita":"19829.0","HDI":"0.777","ECI":"nan","Population 2018":"52438.0","country":"saint kitts and nevis","macro_region":"Americas","meso_region":"Caribbean","development_level":"Developing economies","gdp_per_capita":"19829.0","gdp_volume":"1039875050.0","hdi":"0.777","ECI":"nan","code":"KNA","country_population_2018":"52438.0","country_population_2018_level":"<100k","lat":"17.2","lon":"-62.45","count":"3","relative_1M_count":"57.21041992448225"},"geometry":{"type":"Point","coordinates":[-62.45,17.2]}}
+]}

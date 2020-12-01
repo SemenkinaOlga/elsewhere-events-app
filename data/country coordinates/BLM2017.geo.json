@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","id":"BLM","properties":{"country":"saint barthélemy","country":"saint barthélemy","year":"2017","macro_region":"Americas","meso_region":"Caribbean","development_level":"Developing economies","gdp_per_capita":"nan","gdp_volume":"nan","hdi":"nan","ECI":"nan","code":"BLM","country_population_2018":"9824.0","country_population_2018_level":"<100k","lat":"17.9","lon":"-62.85","count":"1","relative_1M_count":"101.79153094462539"},"geometry":{"type":"Point","coordinates":[-62.85,17.9]}}
+]}

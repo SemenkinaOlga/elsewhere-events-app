@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","id":"MAC","properties":{"name":"macao","Macro Region":"Asia","Meso Region":"Eastern Asia","GDP per Capita":"114000.0","HDI":"nan","ECI":"nan","Population 2018":"631633.0","country":"macao","macro_region":"Asia","meso_region":"Eastern Asia","development_level":"Developing economies","gdp_per_capita":"114000.0","gdp_volume":"71800000000.0","hdi":"nan","ECI":"nan","code":"MAC","country_population_2018":"631633.0","country_population_2018_level":"100k-1M","lat":"22.1","lon":"113.33","count":"403","relative_1M_count":"638.0287287079682"},"geometry":{"type":"Point","coordinates":[113.33,22.1]}}
+]}

@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","id":"CYM","properties":{"country":"cayman islands","country":"cayman islands","year":"2018","macro_region":"Americas","meso_region":"Caribbean","development_level":"Developing economies","gdp_per_capita":"43800.0","gdp_volume":"2507000000.0","hdi":"nan","ECI":"nan","code":"CYM","country_population_2018":"64172.0","country_population_2018_level":"<100k","lat":"19.3","lon":"-80.3","count":"1","relative_1M_count":"15.583120364021692"},"geometry":{"type":"Point","coordinates":[-80.3,19.3]}}
+]}

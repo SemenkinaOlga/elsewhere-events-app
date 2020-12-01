@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","id":"FSM","properties":{"country":"federated states of micronesia","country":"federated states of micronesia","year":"2009","macro_region":"Oceania","meso_region":"Oceania","development_level":"Developing economies","gdp_per_capita":"3504.0","gdp_volume":"390596546.3","hdi":"0.614","ECI":"nan","code":"FSM","country_population_2018":"112640.0","country_population_2018_level":"100k-1M","lat":"7.3","lon":"150.15","count":"1","relative_1M_count":"8.877840909090908"},"geometry":{"type":"Point","coordinates":[150.15,7.3]}}
+]}

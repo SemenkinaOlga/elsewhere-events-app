@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","id":"QAT","properties":{"country":"qatar","year":"2011","macro_region":"Asia","meso_region":"Western Asia","development_level":"Developing economies","gdp_per_capita":"124609.0","gdp_volume":"339525961614.0","hdi":"0.848","ECI":"0.39620700000000003","code":"QAT","country_population_2018":"2781682.0","country_population_2018_level":"1-5M","lat":"25.3","lon":"51.15","count":"6","relative_1M_count":"2.1569683378617683","name":"Qatar"},"geometry":{"type":"Polygon","coordinates":[[[50.810108,24.754743],[50.743911,25.482424],[51.013352,26.006992],[51.286462,26.114582],[51.589079,25.801113],[51.6067,25.21567],[51.389608,24.627386],[51.112415,24.556331],[50.810108,24.754743]]]}}
+]}
