@@ -1,33 +1,24 @@
 import dash
-import dash_table
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 import plotly.express as px
 from bokeh.embed import file_html
 from bokeh.resources import CDN
-import numpy as np
 import pandas as pd
 
 import read_data as rd
 import plots as plots
-import clusterization
-import mapping
+import preprocess as prep
+
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server = app.server
 app.config["suppress_callback_exceptions"] = True
 
-PAGE_SIZE = 20
 plot_height = 400
 plot_width = 900
-default_colors = ['red', 'orange', 'lightyellow', 'green', 'darkgreen']
-more_colors = ['red', 'orange', 'yellow', 'green', 'deepskyblue', 'blue', 'darkviolet']
-ten_colors = ['red', 'orange', 'yellow', 'lime', 'green', 'deepskyblue', 'blue', 'indigo', 'deeppink', 'black']
-
-additional_columns = ['macro_region', 'meso_region', 'development_level', 'gdp_per_capita',
-                      'gdp_volume', 'hdi', 'ECI', 'code', 'country_population_2018', 'country_population_2018_level']
 
 dropdown_options = [{'label': 'Macro Region', 'value': 'macro_region'},
                     {'label': 'Meso Region', 'value': 'meso_region'},
@@ -40,78 +31,6 @@ dropdown_options = [{'label': 'Macro Region', 'value': 'macro_region'},
                     {'label': 'Source', 'value': 'source'}]
 
 dropdown_float_options = ['gdp_per_capita', 'gdp_volume', 'hdi', 'ECI']
-
-
-def create_df_for_map(selected_year_min, selected_year_max, cluster_number, chosen_sources, use_clusters):
-    df = df_country_source_year[df_country_source_year['year'] >= selected_year_min]
-    df = df[df['year'] <= selected_year_max]
-    df = df[df['source'].isin(chosen_sources)]
-    df = df.reset_index()
-
-    dict_cols = dict((col, lambda x: x.iloc[0]) for col in additional_columns if col in df.columns)
-    dict_cols['count'] = "sum"
-    dict_cols['relative_1M_count'] = "sum"
-    grouped_df = df.groupby(['country']).agg(dict_cols).reset_index()
-
-    if use_clusters:
-        df_predict = clusterization.clusterization_K_Means_1dim(grouped_df, 'country',
-                                                                'relative_1M_count', cluster_number)
-        df_for_map = clusterization.add_indexation_by_events_amount_for_clusters(df_predict)
-
-        return df_for_map
-    else:
-        return grouped_df
-
-
-def make_map(df_for_map, selected_year_min, selected_year_max, cluster_number, chosen_sources, use_clusters):
-    if use_clusters:
-        name = "Relative events for countries in [" + str(selected_year_min) + ", " + \
-               str(selected_year_max) + "] - KMeans clusters " + str(cluster_number)
-        return mapping.get_new_map(df_for_map, 'index', name, ten_colors[:cluster_number], True)
-    else:
-        name = "Relative number of events per 1M people in [" + str(selected_year_min) + ", " + \
-                            str(selected_year_max) + "]"
-        return mapping.get_new_map(df_for_map, 'relative_1M_count', name, ten_colors)
-
-
-def create_levels(df, column):
-    min_value = df[column].min()
-    max_value = df[column].max()
-
-    steps_number = 10
-    step = (max_value - min_value) / steps_number
-    conditions = []
-    choices = []
-
-    current = min_value
-    current_max = min_value + step
-
-    divider = 1
-    text = ''
-    if max_value > 1000:
-        if max_value > 1000000000:
-            divider = 1000000000
-            text = 'b'
-        elif max_value > 1000000:
-            divider = 1000000
-            text = 'm'
-        else:
-            divider = 1000
-            text = 'k'
-
-    for i in range(0, steps_number):
-        conditions.append((df[column] <= current_max) & (df[column] > current))
-        choices.append(str(round(current/divider, 2)) + text + '-' + str(round(current_max/divider, 2)) + text)
-        current = current + step
-        if i == steps_number - 2:
-            current_max = max_value
-        else:
-            current_max = current_max + step
-
-    df[column + '_level'] = np.select(conditions, choices, default='unknown')
-
-    return df
-
 
 # Read files
 data = rd.read_data()
@@ -128,17 +47,15 @@ max_year = max(years)
 avg_year = min_year + round((max_year - min_year) / 2.0)
 clusters = [x for x in range(2, 13, 1)]
 init_cluster_number = 6
+init_use_clusters = True
 sources = df_country_source_year['source'].unique().tolist()
 init_sources = ['TED', 'MEETUP', 'BEHANCE', 'EFLUX', 'ART_EDUCATION']
 init_use_ico = False
 
-print(df_country_source_year.columns)
-dict_cols_transform_sum = dict((col, lambda x: x.iloc[0]) for col in additional_columns if col in df_country_year.columns)
-dict_cols_transform_sum['count'] = "sum"
-dict_cols_transform_sum['relative_1M_count'] = "sum"
+init_df_for_map = prep.create_df_for_map(df_country_source_year, min_year, max_year, init_cluster_number,
+                                         init_sources, init_use_clusters)
+init_map = prep.make_map(init_df_for_map, min_year, max_year, init_cluster_number, init_sources, init_use_clusters)
 
-init_df_for_map = create_df_for_map(min_year, max_year, init_cluster_number, init_sources, additional_columns)
-init_map = make_map(init_df_for_map, min_year, max_year, init_cluster_number, init_sources, additional_columns)
 init_map.save(rd.get_relative_path("init_map.html"))
 
 fig_bokeh_bar = plots.get_bar_plot_sum(df_country_year, 'development_level', '', plot_height, plot_width, 'development_level')
@@ -238,7 +155,7 @@ def update(color):
     current_df = df_country_source_year
     n_color = color
     if color in dropdown_float_options:
-        current_df = create_levels(current_df, color)
+        current_df = prep.create_levels(current_df, color)
         n_color = color + '_level'
     bokeh_bar = plots.get_bar_plot_sum(current_df, n_color, '', plot_height, plot_width, color)
     html_bar = file_html(bokeh_bar, CDN, "fig_bokeh_bar")
@@ -255,8 +172,8 @@ def update(color):
      Input('multi-source-map', 'value'),
      Input('use-cluster-map', 'value')])
 def update(year_range, cluster_number, chosen_sources, use_clusters):
-    df_for_map = create_df_for_map(year_range[0], year_range[1], cluster_number, chosen_sources, use_clusters)
-    current_map = make_map(df_for_map, year_range[0], year_range[1], cluster_number, chosen_sources, use_clusters)
+    df_for_map = prep.create_df_for_map(df_country_source_year, year_range[0], year_range[1], cluster_number, chosen_sources, use_clusters)
+    current_map = prep.make_map(df_for_map, year_range[0], year_range[1], cluster_number, chosen_sources, use_clusters)
     current_map.save(rd.get_relative_path("map.html"))
     year_label = 'Year [' + str(year_range[0]) + ", " + str(year_range[1]) + "]"
     return open(rd.get_relative_path("map.html"), 'r').read(), year_label
