@@ -30,7 +30,45 @@ dropdown_options = [{'label': 'Macro Region', 'value': 'macro_region'},
                     {'label': 'Country Population 2018 Level', 'value': 'country_population_2018_level'},
                     {'label': 'Source', 'value': 'source'}]
 
-dropdown_float_options = ['gdp_per_capita', 'gdp_volume', 'hdi', 'ECI']
+dropdown_all_options = [{'label': 'Macro Region', 'value': 'macro_region'},
+                        {'label': 'Meso Region', 'value': 'meso_region'},
+                        {'label': 'Development Level', 'value': 'development_level'},
+                        {'label': 'GDP per Capita', 'value': 'gdp_per_capita'},
+                        {'label': 'GDP Volume', 'value': 'gdp_volume'},
+                        {'label': 'HDI', 'value': 'hdi'},
+                        {'label': 'ECI', 'value': 'ECI'},
+                        {'label': 'Country Population 2018 Level', 'value': 'country_population_2018_level'},
+                        {'label': 'Country Population 2018', 'value': 'country_population_2018'},
+                        {'label': 'Count', 'value': 'count'},
+                        {'label': 'Relative per 1M count', 'value': 'relative_1M_count'}]
+
+dropdown_float_options = [{'label': 'GDP per Capita', 'value': 'gdp_per_capita'},
+                          {'label': 'GDP Volume', 'value': 'gdp_volume'},
+                          {'label': 'HDI', 'value': 'hdi'},
+                          {'label': 'ECI', 'value': 'ECI'},
+                          {'label': 'Country Population 2018', 'value': 'country_population_2018'},
+                          {'label': 'Count', 'value': 'count'},
+                          {'label': 'Relative per 1M count', 'value': 'relative_1M_count'}]
+
+dropdown_size_options = [{'label': 'Country Population 2018', 'value': 'country_population_2018'},
+                         {'label': 'Count', 'value': 'count'},
+                         {'label': 'Relative per 1M count', 'value': 'relative_1M_count'}]
+
+dropdown_axis_options = [{'label': 'GDP per Capita', 'value': 'gdp_per_capita'},
+                          {'label': 'GDP Volume', 'value': 'gdp_volume'},
+                          {'label': 'HDI', 'value': 'hdi'},
+                          {'label': 'ECI', 'value': 'ECI'},
+                          {'label': 'Country Population 2018', 'value': 'country_population_2018'}]
+
+dropdown_color_schemes = [{'label': 'Plasma', 'value': 'Plasma'},
+                          {'label': 'Viridis', 'value': 'Viridis'},
+                          {'label': 'Inferno', 'value': 'Inferno'},
+                          {'label': 'Turbo', 'value': 'Turbo'},
+                          {'label': 'thermal', 'value': 'thermal'},
+                          {'label': 'haline', 'value': 'haline'},
+                          {'label': 'matter', 'value': 'matter'},
+                          {'label': 'Sunset', 'value': 'Sunset'},
+                          {'label': 'Agsunset', 'value': 'Agsunset'}]
 
 # Read files
 data = rd.read_data()
@@ -39,6 +77,8 @@ df_country_year = data['country_year']
 df_country_source_year = data['country_source_year']
 df_city_year = data['city_year']
 df_city = data['city']
+df_country_year_extended = prep.create_country_year_extended(df_country_year)
+df_country_source_year_extended = prep.create_country_source_year_extended(df_country_source_year)
 
 years = df_country_source_year['year'].unique().tolist()
 years.sort()
@@ -58,9 +98,11 @@ init_map = prep.make_map(init_df_for_map, min_year, max_year, init_cluster_numbe
 
 init_map.save(rd.get_relative_path("init_map.html"))
 
-fig_bokeh_bar = plots.get_bar_plot_sum(df_country_year, 'development_level', '', plot_height, plot_width, 'development_level')
+init_col = 'development_level'
+
+fig_bokeh_bar = plots.get_bar_plot_sum(df_country_year, init_col, '', plot_height, plot_width, init_col)
 html_bokeh_bar = file_html(fig_bokeh_bar, CDN, "fig_bokeh_bar")
-fig_bokeh_plot = plots.get_2_dim_plot_sum(df_country_year, 'year', 'development_level', plot_height, plot_width, 'development_level')
+fig_bokeh_plot = plots.get_2_dim_plot_sum(df_country_year, 'year', init_col, plot_height, plot_width, init_col)
 html_bokeh_plot = file_html(fig_bokeh_plot, CDN, "fig_bokeh_plot")
 
 app.layout = html.Div(children=[
@@ -116,15 +158,75 @@ app.layout = html.Div(children=[
         ], style={'width': '68%', 'display': 'inline-block'})
     ]),
     html.Br(),
+    html.Div(id='bubble-div', children=[
+        html.Div(id='bubble-settings', children=[
+            html.Label('X-axis'),
+            dcc.Dropdown(
+                id='bubble-x',
+                options=dropdown_axis_options,
+                value='gdp_per_capita',
+                clearable=False
+            ),
+            html.Label('Y-axis'),
+            dcc.Dropdown(
+                id='bubble-y',
+                options=dropdown_float_options,
+                value='relative_1M_count',
+                clearable=False
+            ),
+            html.Label('Bubble size'),
+            dcc.Dropdown(
+                id='bubble-size',
+                options=dropdown_size_options,
+                value='relative_1M_count',
+                clearable=False
+            ),
+            html.Label('Color'),
+            dcc.Dropdown(
+                id='bubble-color',
+                options=dropdown_all_options,
+                value='macro_region',
+                clearable=False
+            ),
+            html.Label('Color scheme'),
+            dcc.Dropdown(
+                id='bubble-color-scheme',
+                options=dropdown_color_schemes,
+                value='Viridis',
+                clearable=False
+            ),
+            html.Br(),
+            html.Label('Sources'),
+            dcc.Checklist(
+                id='bubble-sources',
+                options=[{'label': k, 'value': k} for k in sources],
+                value=init_sources,
+                labelStyle={'display': 'inline-block'}
+            )
+        ], style={'width': '28%', 'float': 'left', 'display': 'inline-block'}),
+        html.Div(id='bubble-plot', children=[
+            dcc.Graph(id='graph-bubble')
+        ], style={'width': '68%', 'display': 'inline-block'})
+    ]),
+    html.Br(),
     html.Div(id='graphs', children=[
         html.Div(id='graphs-settings', children=[
             html.Br(),
-            html.Label('Color'),
+            html.Label('Grouping by'),
             dcc.Dropdown(
                 id='graphs-color',
                 options=dropdown_options,
                 value='development_level',
                 clearable=False
+            ),
+            html.Br(),
+            dcc.Checklist(
+                id='use-trends',
+                options=[
+                    {'label': 'Use trends', 'value': 'UT'}
+                ],
+                value=[],
+                labelStyle={'display': 'inline-block'}
             )
         ], style={'width': '28%', 'float': 'left', 'display': 'inline-block'}),
         html.Div(id='graphs-plot', children=[
@@ -146,12 +248,29 @@ app.layout = html.Div(children=[
         style={'width': '100%', 'display': 'inline-block'}),
 ])
 
+#
+@app.callback(
+    Output('graph-bubble', 'figure'),
+    [Input('bubble-x', 'value'),
+     Input('bubble-y', 'value'),
+     Input('bubble-size', 'value'),
+     Input('bubble-color', 'value'),
+     Input('bubble-sources', 'value'),
+     Input('bubble-color-scheme', 'value')])
+def update_figure(x, y, size, color, chosen_sources, color_scheme):
+    df_tmp = prep.create_df_for_bubble(df_country_source_year_extended, chosen_sources)
+    # df_tmp = df_country_year_extended[df_country_year_extended['source'].isin(chosen_sources)]
+    fig = plots.get_bubble_chart(df_tmp, x, y, size, color, color_scheme)
+    fig.update_layout(transition_duration=500)
+    return fig
+
 
 @app.callback(
     Output('bokeh_bar', 'srcDoc'),
     Output('bokeh_plot', 'srcDoc'),
-    [Input('graphs-color', 'value')])
-def update(color):
+    [Input('graphs-color', 'value'),
+     Input('use-trends', 'value')])
+def update(color, use_trends):
     current_df = df_country_source_year
     n_color = color
     if color in dropdown_float_options:
@@ -159,7 +278,7 @@ def update(color):
         n_color = color + '_level'
     bokeh_bar = plots.get_bar_plot_sum(current_df, n_color, '', plot_height, plot_width, color)
     html_bar = file_html(bokeh_bar, CDN, "fig_bokeh_bar")
-    bokeh_plot = plots.get_2_dim_plot_sum(current_df, 'year', n_color, plot_height, plot_width, color)
+    bokeh_plot = plots.get_2_dim_plot_sum(current_df, 'year', n_color, plot_height, plot_width, color, use_trends)
     html_plot = file_html(bokeh_plot, CDN, "fig_bokeh_plot")
     return html_bar, html_plot
 

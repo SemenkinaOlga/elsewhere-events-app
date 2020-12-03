@@ -33,6 +33,18 @@ def create_df_for_map(data, selected_year_min, selected_year_max, cluster_number
         return grouped_df
 
 
+def create_df_for_bubble(data, chosen_sources):
+    df = data[data['source'].isin(chosen_sources)]
+    df = df.reset_index()
+
+    dict_cols = dict((col, lambda x: x.iloc[0]) for col in additional_columns if col in df.columns)
+    dict_cols['count'] = "sum"
+    dict_cols['relative_1M_count'] = "sum"
+    grouped_df = df.groupby(['country', 'year']).agg(dict_cols).reset_index()
+
+    return grouped_df
+
+
 def make_map(df_for_map, selected_year_min, selected_year_max, cluster_number, chosen_sources, use_clusters):
     if use_clusters:
         name = "Relative events for countries in [" + str(selected_year_min) + ", " + \
@@ -81,3 +93,43 @@ def create_levels(df, column):
     df[column + '_level'] = np.select(conditions, choices, default='unknown')
 
     return df
+
+
+def create_country_year_extended(df_country_year):
+    df_tmp = df_country_year.copy()
+    for country in df_tmp['country'].unique().tolist():
+        df_c = df_tmp[df_tmp['country'] == country]
+        df_c = df_c.reset_index(drop=True)
+        for year in df_tmp['year'].unique().tolist():
+            df = df_c[df_c['year'] == year]
+            if len(df) == 0:
+                vals = df_c.loc[0].values.tolist()
+                # vals = vals[-len(vals)+1:]
+                vals[1] = year
+                vals[-2] = 0
+                vals[-1] = 0
+                df_tmp.loc[-1] = vals  # adding a row
+                df_tmp.index = df_tmp.index + 1  # shifting index
+    df_tmp = df_tmp.sort_values(['country', 'year'])
+    df_tmp = df_tmp.reset_index(drop=True)
+    return df_tmp
+
+
+def create_country_source_year_extended(df_country_source_year):
+    df_tmp = df_country_source_year.copy()
+    for country in df_tmp['country'].unique().tolist():
+        df_c = df_tmp[df_tmp['country'] == country]
+        df_c = df_c.reset_index(drop=True)
+        for year in df_tmp['year'].unique().tolist():
+            df = df_c[df_c['year'] == year]
+            if len(df) == 0:
+                vals = df_c.loc[0].values.tolist()
+                # vals = vals[-len(vals)+1:]
+                vals[2] = year
+                vals[-2] = 0
+                vals[-1] = 0
+                df_tmp.loc[-1] = vals
+                df_tmp.index = df_tmp.index + 1
+    df_tmp = df_tmp.sort_values(['country', 'year'])
+    df_tmp = df_tmp.reset_index(drop=True)
+    return df_tmp
