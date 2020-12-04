@@ -77,8 +77,8 @@ df_country_year = data['country_year']
 df_country_source_year = data['country_source_year']
 df_city_year = data['city_year']
 df_city = data['city']
-df_country_year_extended = prep.create_country_year_extended(df_country_year)
-df_country_source_year_extended = prep.create_country_source_year_extended(df_country_source_year)
+df_country_year_extended = data['country_year_extended']
+df_country_source_year_extended = data['country_source_year_extended']
 
 years = df_country_source_year['year'].unique().tolist()
 years.sort()

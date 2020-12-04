@@ -41,7 +41,13 @@ def read_data():
     print("Data df_city_year was read")
     df_city = read_df('elsewhere_events_dataset_processed_city.csv', ',')
     print("Data df_city was read")
+    df_country_year_extended = read_df('elsewhere_events_dataset_processed_country_year_extended.csv', ',')
+    print("Data df_country_year_extended was read")
+    df_country_source_year_extended = read_df('elsewhere_events_dataset_processed_country_source_year_extended.csv', ',')
+    print("Data df_country_source_year_extended was read")
 
     return dict(country=df_country, country_year=df_country_year,
                 country_source_year=df_country_source_year,
-                city_year=df_city_year, city=df_city)
+                city_year=df_city_year, city=df_city,
+                country_year_extended=df_country_year_extended,
+                country_source_year_extended=df_country_source_year_extended)
