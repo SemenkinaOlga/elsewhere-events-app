@@ -95,8 +95,10 @@ init_use_ico = False
 init_df_for_map = prep.create_df_for_map(df_country_source_year, min_year, max_year, init_cluster_number,
                                          init_sources, init_use_clusters)
 init_map = prep.make_map(init_df_for_map, min_year, max_year, init_cluster_number, init_sources, init_use_clusters)
-
 init_map.save(rd.get_relative_path("init_map.html"))
+
+city_map_count = open(rd.get_relative_path("map_city_count.html"), 'r').read()
+city_map_relative = open(rd.get_relative_path("map_city_relative.html"), 'r').read()
 
 init_col = 'development_level'
 
@@ -107,6 +109,7 @@ html_bokeh_plot = file_html(fig_bokeh_plot, CDN, "fig_bokeh_plot")
 
 app.layout = html.Div(children=[
     html.H1(children='Elsewhere Events Dash'),
+    html.H3(children='Country map'),
     html.Div(id='map-div', children=[
         html.Div(id='map-settings', children=[
             html.Br(),
@@ -157,7 +160,9 @@ app.layout = html.Div(children=[
             )
         ], style={'width': '68%', 'display': 'inline-block'})
     ]),
+
     html.Br(),
+    html.H3(children='Bubble plot'),
     html.Div(id='bubble-div', children=[
         html.Div(id='bubble-settings', children=[
             html.Label('X-axis'),
@@ -208,8 +213,10 @@ app.layout = html.Div(children=[
             dcc.Graph(id='graph-bubble')
         ], style={'width': '68%', 'display': 'inline-block'})
     ]),
+
     html.Br(),
-    html.Div(id='graphs', children=[
+    html.H3(children='PLots with grouping'),
+    html.Div(id='graphs-div', children=[
         html.Div(id='graphs-settings', children=[
             html.Br(),
             html.Label('Grouping by'),
@@ -225,7 +232,7 @@ app.layout = html.Div(children=[
                 options=[
                     {'label': 'Use trends', 'value': 'UT'}
                 ],
-                value=[],
+                value=['UT'],
                 labelStyle={'display': 'inline-block'}
             )
         ], style={'width': '28%', 'float': 'left', 'display': 'inline-block'}),
@@ -244,11 +251,43 @@ app.layout = html.Div(children=[
             )
         ], style={'width': '68%', 'display': 'inline-block'})
 
-    ],
-        style={'width': '100%', 'display': 'inline-block'}),
+    ], style={'width': '100%', 'display': 'inline-block'}),
+
+    html.Br(),
+    html.H3(children='Map with cities'),
+    html.Div(id='city-div', children=[
+        html.Div(id='city-settings', children=[
+            html.Br(),
+            html.Label('Color and bubble size'),
+            dcc.Dropdown(
+                id='city-color',
+                options=[{'label': 'Events count', 'value': 'count'},
+                         {'label': 'Relative per 1M events count', 'value': 'relative_1M_count'}],
+                value='count',
+                clearable=False
+            ),
+        ], style={'width': '28%', 'float': 'left', 'display': 'inline-block'}),
+        html.Div(id='city-main', children=[
+            html.Iframe(
+                id='city-map',
+                style={'border': 'none', 'width': '100%', 'height': 600},
+                srcDoc=city_map_count
+            )
+        ], style={'width': '68%', 'display': 'inline-block'}),
+    ], style={'width': '100%', 'display': 'inline-block'})
 ])
 
-#
+
+@app.callback(
+    Output('city-map', 'srcDoc'),
+    [Input('city-color', 'value')])
+def update_figure(color):
+    if color == 'count':
+        return city_map_count
+    else:
+        return city_map_relative
+
+
 @app.callback(
     Output('graph-bubble', 'figure'),
     [Input('bubble-x', 'value'),
