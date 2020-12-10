@@ -1,3 +1,4 @@
+import os
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -10,6 +11,7 @@ import pandas as pd
 import read_data as rd
 import plots as plots
 import preprocess as prep
+import regression as regr
 
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -69,6 +71,9 @@ dropdown_color_schemes = [{'label': 'Plasma', 'value': 'Plasma'},
                           {'label': 'matter', 'value': 'matter'},
                           {'label': 'Sunset', 'value': 'Sunset'},
                           {'label': 'Agsunset', 'value': 'Agsunset'}]
+
+dropdown_count_options = [{'label': 'Count', 'value': 'count'},
+                          {'label': 'Relative per 1M count', 'value': 'relative_1M_count'}]
 
 # Read files
 data = rd.read_data()
@@ -274,14 +279,62 @@ app.layout = html.Div(children=[
                 srcDoc=city_map_count
             )
         ], style={'width': '68%', 'display': 'inline-block'}),
-    ], style={'width': '100%', 'display': 'inline-block'})
+    ], style={'width': '100%', 'display': 'inline-block'}),
+
+    html.Br(),
+    html.H3(children='Regression'),
+    html.Div(id='regression-div', children=[
+        html.Div(id='regression-settings', children=[
+            html.Br(),
+            html.Label('Regression type'),
+            dcc.Dropdown(
+                id='regression-type',
+                options=[{'label': 'Linear regression', 'value': 'linear'}],
+                value='linear',
+                clearable=False
+            ),
+            html.Label('Dependent variable'),
+            dcc.Dropdown(
+                id='regression-field',
+                options=dropdown_axis_options,
+                value='gdp_per_capita',
+                clearable=False
+            ),
+            html.Label('Outcome variable'),
+            dcc.Dropdown(
+                id='regression-value',
+                options=dropdown_count_options,
+                value='relative_1M_count',
+                clearable=False
+            )
+        ], style={'width': '28%', 'float': 'left', 'display': 'inline-block'}),
+        html.Div(id='regression-main', children=[
+            html.Div(id='regression-text'),
+            dcc.Graph(id='regression-plot')
+        ], style={'width': '68%', 'display': 'inline-block'}),
+    ], style={'width': '100%', 'display': 'inline-block'}),
 ])
+
+
+@app.callback(
+    Output('regression-text', 'children'),
+    Output('regression-plot', 'figure'),
+    [Input('regression-type', 'value'),
+     Input('regression-field', 'value'),
+     Input('regression-value', 'value')])
+def update(regression_type, field, value):
+    if regression_type == 'linear':
+        res = regr.linear_regression(df_country, field, value)
+        text = 'Mean squared error: %.2f' % res['mean_squared_error'] + os.linesep \
+               + 'Coefficient of determination: %.2f' % res['r2_score']
+        return text, res['fig']
+    return
 
 
 @app.callback(
     Output('city-map', 'srcDoc'),
     [Input('city-color', 'value')])
-def update_figure(color):
+def update(color):
     if color == 'count':
         return city_map_count
     else:
@@ -296,7 +349,7 @@ def update_figure(color):
      Input('bubble-color', 'value'),
      Input('bubble-sources', 'value'),
      Input('bubble-color-scheme', 'value')])
-def update_figure(x, y, size, color, chosen_sources, color_scheme):
+def update(x, y, size, color, chosen_sources, color_scheme):
     df_tmp = prep.create_df_for_bubble(df_country_source_year_extended, chosen_sources)
     # df_tmp = df_country_year_extended[df_country_year_extended['source'].isin(chosen_sources)]
     fig = plots.get_bubble_chart(df_tmp, x, y, size, color, color_scheme)
