@@ -9,13 +9,12 @@ import branca
 import read_data as rd
 
 map_folder = 'country coordinates'
-zoom_start = 2
+zoom_start = 1
 location = [27.664827, -81.516]
 location_zero = [27, 0]
 
 
 def get_simple_map(df, value_col, title, colors, steps=False):
-
     current_map = folium.Map(location=location_zero, zoom_start=zoom_start)
 
     ma = max(df[value_col])
@@ -50,7 +49,7 @@ def get_simple_map(df, value_col, title, colors, steps=False):
             "fillOpacity": 0.7,
         }
 
-    tooltip =[]
+    tooltip = []
     for i in range(len(df)):
         tooltip.append(GeoJsonTooltip(
             fields=["name"],
@@ -168,7 +167,6 @@ def get_ico_map(df, value_col, title, colors, steps=False):
 
 
 def get_new_map(df, value_col, title, colors, steps=False):
-
     current_map = folium.Map(location=location_zero, zoom_start=zoom_start)
 
     ma = max(df[value_col])
@@ -205,11 +203,11 @@ def get_new_map(df, value_col, title, colors, steps=False):
 
     tooltip = []
     fields = ['country', 'macro_region', 'meso_region', 'development_level', 'gdp_per_capita',
-                   'gdp_volume', 'hdi', 'ECI', 'country_population_2018', 'country_population_2018_level',
-                   'count', 'relative_1M_count']
+              'gdp_volume', 'country_population_2018',
+              'count', 'relative_1M_count']
     names = ['Country', 'Macro Region', 'Meso Region', 'Development level', 'GDP per capita',
-                   'GDP volume', 'HDI', 'ECI', 'Population 2018', 'Population level 2018',
-                   'Events total amount (all sources)', 'Relative per 1M events amount (all sources)']
+             'GDP volume', 'Population 2018',
+             'Events total amount', 'Relative per 1M events amount']
 
     for i in range(len(df)):
         tooltip.append(GeoJsonTooltip(
@@ -230,7 +228,9 @@ def get_new_map(df, value_col, title, colors, steps=False):
     for i in range(len(df)):
         file_name = rd.get_relative_path(str(name_country[i]) + ".geo.json", map_folder)
         if os.path.exists(file_name):
-            current_map.add_child(folium.GeoJson(data=open(file_name, 'r', encoding='utf-8-sig').read(),
-                                                 tooltip=tooltip[i], style_function=stile(i)))
+            data = open(file_name, 'r', encoding='utf-8-sig').read()
+            if "\"type\":\"Point\"" not in data:
+                current_map.add_child(folium.GeoJson(data=data,
+                                                     tooltip=tooltip[i], style_function=stile(i)))
 
     return current_map

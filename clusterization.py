@@ -20,8 +20,8 @@ def clusterization_K_Means_1dim(df, text_col, value_col, n_clusters):
 
 
 def add_indexation_by_events_amount_for_clusters(df):
-    means = df.groupby('cluster').mean()
-    means = means.sort_values(by=['value'])
+    means = df.groupby('cluster')['value'].mean()
+    means = means.sort_values()
     means = means.reset_index()
     means.columns = ['cluster', 'means']
     indexes = [x for x in range(len(means))]
