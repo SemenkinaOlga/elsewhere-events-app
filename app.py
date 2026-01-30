@@ -1,12 +1,7 @@
-import os
 import dash
 from dash import dcc
 from dash import html
 from dash.dependencies import Input, Output
-import plotly.express as px
-from bokeh.embed import file_html
-from bokeh.resources import CDN
-import pandas as pd
 
 import read_data as rd
 import plots as plots

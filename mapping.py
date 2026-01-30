@@ -1,9 +1,7 @@
 import os
 import pandas as pd
 import folium
-from folium.features import GeoJson, GeoJsonTooltip, GeoJsonPopup
-import vincent
-import json
+from folium.features import GeoJsonTooltip
 import branca
 
 import read_data as rd
