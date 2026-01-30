@@ -1,7 +1,4 @@
 bokeh
-django
-gunicorn
-django-heroku
 requests
 dash
 plotly
@@ -13,5 +10,5 @@ wheel
 folium
 branca
 vincent
-sklearn
+scikit-learn
 seaborn
