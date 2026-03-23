@@ -7,6 +7,7 @@ import read_data as rd
 import plots as plots
 import preprocess as prep
 import regression as regr
+import os
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
@@ -359,4 +360,8 @@ def update(field, value):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(
+        host="0.0.0.0",
+        port=int(os.environ.get("PORT", 8050)),
+        debug=False
+    )
